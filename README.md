@@ -28,7 +28,7 @@ network:
 ```
 
 5. Apply configuration by running `sudo netplan try`.
-6. Ensure that your IP is not static by running `ip a` again.
+6. Ensure that your IP is not dynamic by running `ip a` again.
 
 ## Set up port forwarding for your router
 This section covers necessary steps to set up port forwarding so that your web server is accessible from outside world. This is mainly a sketch because exact steps depend on your router model and its software version.
