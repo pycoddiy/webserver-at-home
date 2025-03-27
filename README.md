@@ -81,3 +81,27 @@ My provider is NameCheap.com and the following instruction is how to register th
 4. Repeat by adding another record with the same values as in previous step except `www` in the host.
 5. Repeat the same with `*` in the host.
 6. Wait for 30-60 min for changes to propagate.
+
+# Configuring VPN Server at Home
+This bonus section will guide you through the process of installation of OpenVPN as a VPN server.
+
+## Creating OpenVPN client profile
+1. In the home directory download the installation script `wget https://git.io/vpn -O openvpn-install.sh`
+2. Allow the script to run `sudo chmod +x openvpn-install.sh`
+3. Execute `sudo bash openvpn-install.sh`. Select recommended choices.
+4. Note the port `1194`.
+5. Name the client, e.g. `client_my_phone`
+6. Press any key to start the client profile initialization. This will create the respective file `client_my_phone.ovpn` in your current directory.
+
+## Set up port forwarding in the router
+
+This section covers necessary steps to set up port forwarding so that your VPN server is accessible from outside world. This is mainly a sketch because exact steps depend on your router model and its software version.
+
+1. Connect to your router by typing `10.0.0.1`. Use credetails to log in to the router.
+2. In settings (typically advanced settings or alike) find the **Port Forwarding** section and add new port forwarding rule. For web server select **Service Type** as `VPN-PPTP`, set **External Start Port** and **Internal Start Port** to `1194`, select internal IP address `10.0.0.155`. Select `UDP` as a protocol.
+3. Log out and save your settings.
+4. Transfer client profile to the target device, such as Android phone.
+5. Install OpenVPN client there.
+6. Upload client profile by clickling **Upload File**.
+
+If you need more clients to be connected, generate new `ovpn` files by running the shell script `openvpn-install.sh`
