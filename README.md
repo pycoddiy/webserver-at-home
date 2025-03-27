@@ -75,7 +75,7 @@ server {
 ## Registering web server with domain provider
 My provider is NameCheap.com and the following instruction is how to register the web server we created within NameCheap.com DNS server.
 
-1. Log into `namecheap.com` account and in the Dashboard gselect the domain for which you want to add **A Record**. Click **Manage** button and then navigate to the **Advanced DNS** tab.
+1. Log into `namecheap.com` account and in the Dashboard select the domain for which you want to add **A Record**. Click **Manage** button and then navigate to the **Advanced DNS** tab.
 2. In the host records section click **Add New Record** button.
 3. Select **A Record** in the type, then `@` in the host, and then add your external IP address.
 4. Repeat by adding another record with the same values as in previous step except `www` in the host.
