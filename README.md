@@ -45,7 +45,7 @@ It is up to you what server to use. This section focuses on the installation of 
 2. Open browser and type `localhost` to ensure that Nginx successfully installed and is running its default webpage **Welcome to nginx!**. This page can be found at `/var/www/html`.
 3. Let us create a welcome page to be located at `/var/www/pycoddiy.com`. Run `cd /var/www`, run `sudo mkdir pycoddiy.com`.
 4. Copy `index.html` located in this repository to the target location `/var/www/pycoddiy.com`
-5. Locate the Nginx enabled sites directory `cd /etc/nginx/sites-enabled` and create the new configuration file `pycoddiy` with the following content:
+5. Locate the Nginx enabled sites directory `cd /etc/nginx/sites-enabled` and create the new configuration file `pycoddiy.com.conf` with the following content:
 
 ```nginx
 server {
@@ -105,3 +105,47 @@ This section covers necessary steps to set up port forwarding so that your VPN s
 6. Upload client profile by clickling **Upload File**.
 
 If you need more clients to be connected, generate new `ovpn` files by running the shell script `openvpn-install.sh`
+
+# Configuring HTTPS for Nginx
+For enhanced security HTTPS protocols has become a de-facto standard in web site hosting. This section addresses key steps to turn HTTP site to HTTPS.
+
+1. Create directory where SSL certificates will be stored `sudo mkdir /etc/nginx/ssl`.
+2. Remove all permissions for group and world `sudo chmod 700 /etc/nginx/ssl`.
+3. Generate private RSA key `cd /etc/ssl` and `sudo openssl genrsa --out pycoddiy.com-private.key 2048` 
+4. Create CSR file `sudo openssl req -new -key pycoddiy.com-private.key -out pycoddiy.com-private.csr`. Follow prompts and answer questions.
+5. Copy the content of the `csr` file `cat pycoddiy.com-private.csr` for submission to a Certificate Authority (CA). 
+6. I used NameCheap.com to issues a Certificate Authority (CA). The process is fairly similar to any other entity. Simply follow the instructions provided there. 
+7. Once the certificate is issued, you download it to the server. **NOTE: NameCheap.com provides the certificate in the zip file. You have to unzip it and then combine `pycoddiy_com.ca-bundle` and `pycoddiy_com.crt` files into the chained certificate file, i.e. `pycoddiy_com_chain.crt`** 
+8. Copy chained certificate to the server `/etc/nginx/ssl/pycoddiy_com_chain.crt`.
+8. Edit Nginx config `/etc/nginx/sites-enabled/pycoddiy.com.conf`:
+
+```nginx
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name pycoddiy.com;
+
+        return 301 https://$server_name$request_uri;
+}
+
+server {
+        listen 443 ssl;
+
+        server_name pycoddiy.com
+
+        ssl_certificate /etc/nginx/ssl/pycoddiy_com_chain.crt
+        ssl_certificate_key /etc/ssl/pycoddiy.com-private.key
+
+        location / {
+                try_files $uri $uri/ =404;
+
+                root /var/www/pycoddiy.com;
+
+                index index.html index.htm;
+        }
+}
+```
+
+9. Restart Nginx service `sudo service nginx restart` and `sudo service nginx status`.
+10. If you get **Connection Refused** error, it is likely your SSL traffic is filtered by your router. Add another port forwarding rule for `10.0.0.155` with an open port `443`
