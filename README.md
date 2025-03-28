@@ -114,7 +114,7 @@ For enhanced security HTTPS protocols has become a de-facto standard in web site
 3. Generate private RSA key `cd /etc/ssl` and `sudo openssl genrsa --out pycoddiy.com-private.key 2048` 
 4. Create CSR file `sudo openssl req -new -key pycoddiy.com-private.key -out pycoddiy.com-private.csr`. Follow prompts and answer questions.
 5. Copy the content of the `csr` file `cat pycoddiy.com-private.csr` for submission to a Certificate Authority (CA). 
-6. I used NameCheap.com to issues a Certificate Authority (CA). The process is fairly similar to any other entity. Simply follow the instructions provided there. 
+6. My preferred domain host is **NameCheap.com**  provides some options to issue CA. The process is fairly similar to any other entity. Simply follow the instructions provided there. 
 7. Once the certificate is issued, you download it to the server. **NOTE: NameCheap.com provides the certificate in the zip file. You have to unzip it and then combine `pycoddiy_com.ca-bundle` and `pycoddiy_com.crt` files into the chained certificate file, i.e. `pycoddiy_com_chain.crt`** 
 8. Copy chained certificate to the server `/etc/nginx/ssl/pycoddiy_com_chain.crt`.
 8. Edit Nginx config `/etc/nginx/sites-enabled/pycoddiy.com.conf`:
